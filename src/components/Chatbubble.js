@@ -5,7 +5,7 @@ const Chatbubble = (props) => {
     return (
         <div className={props.me ? 'message' : 'message others'}>
             {props.message.startsWith('http') ? 
-                <img src={props.message} /> : 
+                <img src={props.message} alt=''/> : 
                 <div className='chat'>{props.message}</div>}
             {props.me ?
                 <div className='author'>

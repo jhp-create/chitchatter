@@ -1,5 +1,4 @@
 import React from 'react';
-import { toasterMessenger } from '../components/Messenger';
 
 class Toaster extends React.Component {
   render() {

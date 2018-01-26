@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Home from '../components/Home';
-
+import { connect } from 'react-redux';
+import { addUser, addRoom } from '../actions/index';
 
 class HomeContainer extends Component {
     state = {
@@ -8,38 +9,40 @@ class HomeContainer extends Component {
         room: ""
     }
 
-    enterKey = ev => {
+    handleEnterKeyPress = ev => {
         if (ev.key === "Enter") {
             this.props.history.push('/chatroom')
-            this.props.login(this.state.username, this.state.room)
+            this.props.addUser(this.state.username);
+            this.props.addRoom(this.state.room);
         }
     }
 
-    handleChangeUsername = ev => {
+    setUsername = ev => {
         this.setState({username: ev.target.value})
     }
 
-    handleChangeRoom = ev => {
+    setRoom = ev => {
         this.setState({room: ev.target.value})
     }
 
     handleSubmit = ev => {
         this.props.history.push('/chatroom')
-        this.props.login(this.state.username, this.state.room)
+        this.props.addUser(this.state.username);
+        this.props.addRoom(this.state.room);
         ev.preventDefault()
     }
     
     render() {
         return (
             <Home 
-                onChangeUsername={this.handleChangeUsername}
-                onChangeRoom={this.handleChangeRoom}
+                onChangeUsername={this.setUsername}
+                onChangeRoom={this.setRoom}
                 onSubmit={this.handleSubmit}
-                onKeyPress={this.enterKey}
+                onEnterKeyPress={this.handleEnterKeyPress}
             />
         )
     }
 }
 
-export default HomeContainer;
+export default connect(null, { addUser, addRoom })(HomeContainer);
 

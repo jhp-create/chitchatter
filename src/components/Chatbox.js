@@ -12,15 +12,15 @@ class Chatbox extends Component {
         <div className="upload" style={{ display: this.props.state.open ? "inline" : "none"}}>
           <div className="attach bubble">
             <ReactFileReader fileTypes={[".png", ".jpg",".gif"]} handleFiles={this.props.handleFiles}>
-                <img className="insertImage" src={Image} />  
+                <img className="insertImage" src={Image} alt=''/>  
             </ReactFileReader>
             <ReactFileReader fileTypes={[".pdf"]} handleFiles={this.props.handleFiles}>
-                <img src={Clip} />
+                <img src={Clip} alt=''/>
             </ReactFileReader>    
           </div>
         </div>
         <button ref={this.props.buttonRef} className="plus" >
-          <img src={Plus} />
+          <img src={Plus} alt=''/>
         </button>
         <input 
           type="text" 
@@ -30,7 +30,7 @@ class Chatbox extends Component {
           onKeyPress={this.props.onKeyPress}
         />
         <button className="send" onClick={this.props.onClick} >
-          <img src={Send} />
+          <img src={Send} alt=''/>
         </button>
       </div>
     )

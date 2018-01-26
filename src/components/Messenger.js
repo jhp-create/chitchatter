@@ -1,5 +1,5 @@
 
-export class Messenger {
+class Messenger {
   constructor() {
     this.subscribers = []
   }

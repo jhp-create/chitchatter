@@ -17,7 +17,7 @@ class Home extends React.Component {
                         <strong>Room Name</strong>
                         <input type="text" name="chatroomname"
                             onChange={this.props.onChangeRoom}
-                            onKeyPress={this.props.onKeyPress} 
+                            onKeyPress={this.props.onEnterKeyPress} 
                         />
                         <input 
                             id='join-now'
