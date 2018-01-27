@@ -4,27 +4,30 @@ import ToasterContainer from './ToasterContainer';
 import SidebarContainer from './SidebarContainer';
 import ChatareaContainer from './ChatareaContainer';
 import { connect } from 'react-redux';
+import { 
+  addSocket, 
+  getHistory, 
+  addMessage, 
+  addUserList, 
+  getMembers, 
+  filterUserList 
+} from '../actions/index';
 
 class Chatroom extends Component {
-  state = {
-    users: [],
-    messages: [],
-    socket: null,
-  }
-
   componentWillMount() {
-    if (!this.props.user.username || !this.props.user.room)
+    const { user } = this.props
+    if (!user.username || !user.room)
       return this.props.history.replace('/')
 
     const socket = new WebSocket("ws://188.166.221.63:8000")
     socket.onmessage = this.messageHandler
     socket.onopen = () => {
-      this.setState({ socket })
+      this.props.addSocket(socket)
       socket.send(JSON.stringify({
         type: 'join',
         data: {
-          username: this.props.user.username,
-          room: this.props.user.room
+          username: user.username,
+          room: user.room
         }
       }))
     }
@@ -40,28 +43,20 @@ class Chatroom extends Component {
 
     switch (data.type) {
       case "join_success":
-        toasterMessenger.dispatch('Room Successfully Joined','green')
-        break;
+        return toasterMessenger.dispatch('Room Successfully Joined','green');
       case "history":
-        this.setState({ messages: data.data.messages})
-
-        break;
+        return this.props.getHistory(data.data.messages);
       case "members":
-        data.data.push(this.props.username + ' (You)')
-        this.setState({ users: data.data })
-        break;
+        return this.props.getMembers(data.data, this.props.user.username);
       case "message":
-        this.setState({ messages: this.state.messages.concat([data.data]) })
-
-        break;
+        return this.props.addMessage(data.data);
       case "joined":
-        this.setState({ users: [...this.state.users, data.data.name] })
-        this.setState({ messages: [...this.state.messages, { message:`${data.data.name} has entered the room`, system: true  }] })
+        this.props.addUserList(data.data.name);
+        this.props.addMessage({ message:`${data.data.name} has entered the room`, system: true  });
         break;
       case "left":
-        this.setState({ messages: [...this.state.messages, { message: `${data.data.username} has left the room`, system: true }] })
-        var i = this.state.users.findIndex((currentIndex) => data.data.username === currentIndex)
-        this.setState({ users: this.state.users.slice(0, i).concat(this.state.users.slice(i + 1)) })
+        this.props.addMessage({ message: `${data.data.username} has left the room`, system: true });
+        this.props.filterUserList(this.props.chatroom.users, data.data.username);
         break;
       default:
         break
@@ -69,7 +64,7 @@ class Chatroom extends Component {
   }
 
   sendMessage = (chat) => {
-    this.state.socket.send(JSON.stringify(
+    this.props.chatroom.socket.send(JSON.stringify(
       {
         type: 'message',
         data: { message: chat }
@@ -92,10 +87,10 @@ class Chatroom extends Component {
   }
 
   logOut = () => {
-    this.state.socket.send(JSON.stringify(
+    this.props.chatroom.socket.send(JSON.stringify(
       {
         type: 'leave',
-        data: { username: this.props.username }
+        data: { username: this.props.user.username }
       },
       this.props.history.push('/')
     ))
@@ -105,14 +100,10 @@ class Chatroom extends Component {
     return (
       <div className="chatroom">
           <div id="header">ChitChatter</div>
-          <SidebarContainer 
-            room={this.props.room} 
-            users={this.state.users}
+          <SidebarContainer
             logOut={this.logOut}
           />
           <ChatareaContainer 
-            messages={this.state.messages}
-            username={this.props.username}
             onClick={this.sendMessage}
             sendFiles={this.sendFiles}
           />
@@ -124,10 +115,20 @@ class Chatroom extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ user, chatroom }) {
   return {
-    user: state.user
+    user,
+    chatroom
   }
 }
 
-export default connect(mapStateToProps)(Chatroom);
+export default connect(
+  mapStateToProps, 
+  { addSocket, 
+    getHistory, 
+    addMessage, 
+    addUserList, 
+    getMembers,
+    filterUserList
+  }
+  )(Chatroom);
