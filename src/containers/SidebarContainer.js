@@ -20,12 +20,12 @@ class SidebarContainer extends Component {
   }
 
   closeSide = () => {
-    this.setState({reveal: false})
+    this.setState({ reveal: false })
   }
 
   toggleSidebar = (e) => {
     e.stopPropagation()
-    this.setState({reveal: !this.state.reveal})
+    this.setState({ reveal: !this.state.reveal })
   }
 
   assignButton = button => {
@@ -38,9 +38,7 @@ class SidebarContainer extends Component {
             state={this.state}
             buttonRef={this.assignButton}
             onClickButton={this.toggleSidebar}
-            room={this.props.room}
             onClickLogout={this.props.logOut}
-            users={this.props.users}
         />
     )
   }

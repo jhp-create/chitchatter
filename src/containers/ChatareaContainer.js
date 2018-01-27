@@ -1,6 +1,7 @@
 import React from 'react';
 import Chatbubble from '../components/Chatbubble';
 import ChatboxContainer from './ChatboxContainer';
+import { connect } from 'react-redux'
 
 class ChatareaContainer extends React.Component {
     componentDidUpdate(newProps) {
@@ -11,7 +12,7 @@ class ChatareaContainer extends React.Component {
         return (
             <div className="chatarea">
                 <div ref={(el) => this.chatNode = el} className="chat-messages">
-                    {this.props.messages.map((message, i) => {
+                    {this.props.chatroom.messages.map((message, i) => {
                         if(message.system === true) {
                             return(
                                 <div key={i} className="joined-leave">
@@ -25,7 +26,7 @@ class ChatareaContainer extends React.Component {
                                     message={message.message}
                                     author={message.author}
                                     date={message.date}
-                                    me={message.author === this.props.username}
+                                    me={message.author === this.props.user.username}
                                 />
                             )
                         }
@@ -40,4 +41,11 @@ class ChatareaContainer extends React.Component {
     }
 }
 
-export default ChatareaContainer;
+function mapStateToProps({ user, chatroom }) {
+    return {
+        user,
+        chatroom
+    }
+}
+
+export default connect(mapStateToProps)(ChatareaContainer);
