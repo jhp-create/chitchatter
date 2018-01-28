@@ -2,12 +2,8 @@ import React, { Component } from 'react';
 import Sidebar from '../components/Sidebar';
 
 class SidebarContainer extends Component {
-  constructor() {
-    super();
-    this.state = {
-        reveal: false,
-        sideClass: 'sidebar-chatroom'
-    }
+  state = {
+      reveal: false,
   }
   
   componentDidMount() {
