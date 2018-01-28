@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 class ChatareaContainer extends React.Component {
     componentDidUpdate(newProps) {
-        (this.chatNode.scrollTop = this.chatNode.scrollHeight)
+        (this.chatNode.scrollTop = this.chatNode.scrollHeight*2)
     }
 
     render() {

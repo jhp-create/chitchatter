@@ -16,8 +16,9 @@ import {
 class Chatroom extends Component {
   componentWillMount() {
     const { user } = this.props
-    if (!user.username || !user.room)
-      return this.props.history.replace('/')
+    if (!user.username || !user.room) {
+      this.props.history.replace('/')
+    }
 
     const socket = new WebSocket("ws://188.166.221.63:8000")
     socket.onmessage = this.messageHandler
